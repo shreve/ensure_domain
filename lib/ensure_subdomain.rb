@@ -1,4 +1,4 @@
-module EnsureDomain
+module EnsureSubdomain
 	class WWW
 		def self.matches?(request)
 			request.host !~ /^www/
@@ -25,10 +25,10 @@ module EnsureDomain
 end
 
 module ActionDispatch::Routing::Mapper::HttpHelpers
-	include EnsureDomain
+	include EnsureSubdomain
 
 	def ensure_no_www
-		constraints( EnsureDomain::NoWWW ) do
+		constraints( EnsureSubdomain::NoWWW ) do
 			get '/', to: redirect { |params, request| "#{request.protocol}#{request.domain}" }
 			match '/*path', to: redirect { |params, request| "#{request.protocol}#{request.domain}/#{params[:path]}" }, via: [:get, :post, :put, :patch, :delete]
 		end
@@ -36,14 +36,14 @@ module ActionDispatch::Routing::Mapper::HttpHelpers
 	alias_method :ensure_non_www, :ensure_no_www
 	
 	def ensure_www
-		constraints( EnsureDomain::WWW ) do
+		constraints( EnsureSubdomain::WWW ) do
 			get '/', to: redirect { |params, request| "#{request.protocol}www.#{request.domain}" }
 			match '/*path', to: redirect { |params, request| "#{request.protocol}www.#{request.domain}/#{params[:path]}" }, via: [:get, :post, :put, :patch, :delete]
 		end
 	end
 
 	def ensure_subdomain(*args)
-		constraints( EnsureDomain::Custom.new( args[0] ) ) do
+		constraints( EnsureSubdomain::Custom.new( args[0] ) ) do
 			get '/', to: redirect { |params, request| "#{request.protocol}#{args[0]}.#{request.domain}" }
 			match '/*path', to: redirect { |params, request| "#{request.protocol}#{args[0]}.#{request.domain}/#{params[:path]}" }, via: [:get, :post, :put, :patch, :delete]
 		end
