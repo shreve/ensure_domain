@@ -1,51 +1,38 @@
-module EnsureSubdomain
-	class WWW
-		def self.matches?(request)
-			request.host !~ /^www/
-		end
+class EnsureSubdomain
+	attr_accessor :subdomain
+	
+	def initialize(subdomain)
+		self.subdomain = subdomain.sub(/\.$/, '')
 	end
 
-	class NoWWW
-		def self.matches?(request)
-			request.subdomain =~ /^.*$/
-		end
+	def matches?(request)
+		request.subdomain.match(self.subdomain).nil?
 	end
-
-	class Custom
-		attr_accessor :pattern
-		
-		def initialize(pattern)
-			self.pattern = pattern
-		end
-
-		def matches?(request)
-			request.subdomain.match(self.pattern).nil?
-		end
+	
+	def to(params, request)
+		url = request.protocol
+		url << "#{self.subdomain}." if self.subdomain.present?
+		url << request.domain
+		url << "/#{params[:path]}" if params[:path].present?
+		url
 	end
 end
 
 module ActionDispatch::Routing::Mapper::HttpHelpers
-	include EnsureSubdomain
-
 	def ensure_no_www
-		constraints( EnsureSubdomain::NoWWW ) do
-			get '/', to: redirect { |params, request| "#{request.protocol}#{request.domain}" }
-			match '/*path', to: redirect { |params, request| "#{request.protocol}#{request.domain}/#{params[:path]}" }, via: [:get, :post, :put, :patch, :delete]
-		end
+		ensure_subdomain ''
 	end
 	alias_method :ensure_non_www, :ensure_no_www
 	
 	def ensure_www
-		constraints( EnsureSubdomain::WWW ) do
-			get '/', to: redirect { |params, request| "#{request.protocol}www.#{request.domain}" }
-			match '/*path', to: redirect { |params, request| "#{request.protocol}www.#{request.domain}/#{params[:path]}" }, via: [:get, :post, :put, :patch, :delete]
-		end
+		ensure_subdomain 'www'
 	end
 
-	def ensure_subdomain(*args)
-		constraints( EnsureSubdomain::Custom.new( args[0] ) ) do
-			get '/', to: redirect { |params, request| "#{request.protocol}#{args[0]}.#{request.domain}" }
-			match '/*path', to: redirect { |params, request| "#{request.protocol}#{args[0]}.#{request.domain}/#{params[:path]}" }, via: [:get, :post, :put, :patch, :delete]
+	def ensure_subdomain(subdomain, options={})
+		redirector = EnsureSubdomain.new( subdomain )
+		verbs = options[:via] || [:get, :post, :put, :patch, :delete] 
+		constraints( redirector ) do
+			match '/*path', to: redirect { |params, request| redirector.to params, request }, via: verbs
 		end
 	end
 end
