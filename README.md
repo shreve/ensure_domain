@@ -2,8 +2,6 @@
 
 an ActionDispatch extension to handle subdomain redirects
 
-#### Warning: There aren't any tests yet, so this is probably not suitable for production. If you'd like to contribute, I wouldn't be opposed.
-
 Let's say you believe that [using the www subdomain is dumb](http://no-www.org).
 Ensuring your rails app doesn't use this subdomain is pretty easy, but now it's easier.
 
