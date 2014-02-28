@@ -1,8 +1,9 @@
 # Ensure Subdomain
 
-an ActionDispatch extension to handle subdomain redirects
+_an ActionDispatch extension to handle subdomain redirects_
 
 Let's say you believe that [using the www subdomain is dumb](http://no-www.org).
+
 Ensuring your rails app doesn't use this subdomain is pretty easy, but now it's easier.
 
 ```ruby
@@ -20,7 +21,8 @@ Rails.application.routes.draw do
 end
 ```
 
-GET http://www.example.com  -> 301  http://example.com
+GET www.example.com   → 301   example.com
+
 Simple as that.
 
 Conversely, if you are wrong and think you should use www, there's a method for that.
@@ -32,20 +34,21 @@ Rails.application.routes.draw do
 end
 ```
 
-GET http://example.com  -> 301  http://www.example.com
+GET example.com  → 301  www.example.com
 
 
 If you've got some other domain, there's a method for that too.
 
 ```ruby
 # config/routes.rb
-My::Application.routes.draw do
+Rails.application.routes.draw do
   ensure_subdomain 'blog'
 end
 ```
 
-GET http://example.com  -> 301  http://blog.example.com
-GET http://www.example.com  -> 301  http://blog.example.com
+GET example.com  → 301  blog.example.com
+
+GET www.example.com  → 301  blog.example.com
 
 What if you want to control the direction for different environments? I've got ya.
 
@@ -60,5 +63,6 @@ end
 
 Also recently added, and somewhat experimental, _not fucking up on Heroku!_
 
-*Before:* GET http://application.herokuapp.com  -> 301  http://herokuapp.com  -> 301  http://heroku.com
-*After:* GET http://application.herokuapp.com
+*Before:* GET application.herokuapp.com  → 301  herokuapp.com  → 301  heroku.com
+
+*After:* GET application.herokuapp.com
