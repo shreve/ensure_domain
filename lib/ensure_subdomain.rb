@@ -30,7 +30,8 @@ module ActionDispatch::Routing::Mapper::HttpHelpers
   def ensure_no_www
     ensure_subdomain ''
   end
-  alias_method :ensure_non_www, :ensure_no_www, :ensure_apex
+  alias_method :ensure_non_www, :ensure_no_www
+  alias_method :ensure_apex, :ensure_no_www
 
   def ensure_www
     ensure_subdomain 'www'
