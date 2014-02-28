@@ -30,10 +30,18 @@ module ActionDispatch::Routing::Mapper::HttpHelpers
   def ensure_no_www
     ensure_subdomain ''
   end
-  alias_method :ensure_non_www, :ensure_no_www
+  alias_method :ensure_non_www, :ensure_no_www, :ensure_apex
 
   def ensure_www
     ensure_subdomain 'www'
+  end
+
+  def ensure_on(environments)
+    environments.each_pair do |env, domain|
+      if Rails.env.to_sym == env
+        ensure_subdomain domain
+      end
+    end
   end
 
   def ensure_subdomain(subdomain, options={})
