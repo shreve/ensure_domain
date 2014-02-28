@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.homepage = 'https://github.com/shreve/ensure_subdomain'
   s.license = 'MIT'
 
-  s.add_runtime_dependency 'actionpack', '>= 4.0.0'
+  s.add_runtime_dependency 'actionpack', '>= 3.2.0'
 
   s.files = `git ls-files`.split("\n")
   s.require_path = 'lib'

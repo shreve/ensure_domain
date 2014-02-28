@@ -6,9 +6,11 @@ class EnsureSubdomain
   end
 
   def matches?(request)
+    # don't deal with addresses like http://0.0.0.0:3000
+    request.domain.present? and
     # ''.match('www') #=> nil, which is is the opposite of what we want
-    (self.subdomain.empty? && request.subdomain.present?) ||
-      request.subdomain.match(self.subdomain).nil?
+      ((self.subdomain.empty? and request.subdomain.present?) or
+        request.subdomain.match(self.subdomain).nil?)
   end
 
   def to(params, request)
