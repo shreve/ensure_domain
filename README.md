@@ -2,6 +2,9 @@
 
 _an ActionDispatch extension to handle subdomain redirects_
 
+[![Gem Version](https://badge.fury.io/rb/ensure_subdomain.png)](http://badge.fury.io/rb/ensure_subdomain)
+[![Code Climate](https://codeclimate.com/github/shreve/ensure_subdomain.png)](https://codeclimate.com/github/shreve/ensure_subdomain)
+
 Let's say you believe that [using the www subdomain is dumb](http://no-www.org).
 
 Ensuring your rails app doesn't use this subdomain is pretty easy, but now it's easier.
