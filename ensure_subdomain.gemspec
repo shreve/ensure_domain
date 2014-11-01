@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.summary = 'Ensure requests are going to the right subdomain.'
   s.description = 'Ensure requests are going to the right subdomain to avoid competing with yourself for dem SERPs. Adds a couple methods to ActionDispatch for routes.'
   s.homepage = 'https://github.com/shreve/ensure_subdomain'
-  s.license = 'MIT'
+  s.license = 'WTFPL'
 
   s.add_runtime_dependency 'actionpack', '>= 3.2.0'
 
