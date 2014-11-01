@@ -1,6 +1,6 @@
 require_relative './test_helper'
 
-class TestEnsureSubdomain < MiniTest::Unit::TestCase
+class TestEnsureSubdomain < MiniTest::Test
 =begin
   Test that the EnsureSubdomain constraint matching works.
   Involves class initialization, and the matches method
